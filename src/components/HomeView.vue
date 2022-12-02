@@ -30,6 +30,9 @@
 
     <div class="container">
       <div class="row justify-content-lg-start  text-xl-left">
+        <div class="col-12" v-if="!tasks.length">
+            <p>No Tasks!</p>
+      </div>
         <div class="col-12 col-sm-6 col-xl-4 pb-3" v-for="(item, index) in tasks" :key="index">
           <div class="card">
             <div class="card-body text-xl-left">
@@ -63,11 +66,12 @@
       </div>
     </div>
   </div>
-  <div class="footer py-4 border-top">
+
+  <div class="footer py-4 border-top" v-if="tasks.length > 0">
     <div class="container">
       <div class="row justify-content-center text-center">
         <div class="col-12">
-          <h3 v-if="tasks.length > 0">Current <span class="badge bg-warning "> {{ tasks.length }}</span> tasks</h3>
+          <h3 >Current <span class="badge bg-warning "> {{ tasks.length }}</span> tasks</h3>
         </div>
       </div>
     </div>
@@ -78,6 +82,7 @@
 
 <script lang="ts">
 
+import { faL } from '@fortawesome/free-solid-svg-icons';
 import { mapGetters } from 'vuex'
 export default {
   name: 'HomeView',
@@ -114,12 +119,18 @@ export default {
     },
     submit() {
       if (this.editedTask != null) {
+
         this.tasks[this.editedTask].name = this.name;
         this.tasks[this.editedTask].description = this.description;
         this.tasks[this.editedTask].status = this.selectedStatus;
+        
+       
         this.name = ''
         this.description = ''
-     
+        if (this.tasks[this.editedTask].name == '' && this.tasks[this.editedTask].description == '') {
+          this.message = 'Please enter empty fields';
+        }
+
       } else {
         if (this.name === '' || this.description === '') {
           this.message = 'Please enter empty fields';
